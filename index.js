@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const morgan = require('morgan')
 app.use(express.json())
 
 let phoneNumbers = [
@@ -24,6 +25,8 @@ let phoneNumbers = [
         number: '666666666'
     },
 ]
+
+app.use(morgan('tiny'))
 
 app.get('/api/persons', (req,res) => {
     res.json(phoneNumbers)
@@ -56,6 +59,13 @@ app.delete('/api/persons/:id', (req,res) => {
     res.status(204).end()
 })
 
+morgan.token('posted-data', (req, res, param) => {
+    return JSON.stringify(req.body)
+});
+
+app.use(morgan(':posted-data'))
+
+
 app.post('/api/persons', (req,res) => {
     const id = Math.floor(Math.random() * 10000)
     const name = req.body.name
@@ -82,7 +92,7 @@ app.post('/api/persons', (req,res) => {
 
     phoneNumbers.push(store)
 
-    res.status(200).json({message:'ok'})
+    res.status(200).json({message:'ok', data:store})
 })
 
 const PORT = 5000
