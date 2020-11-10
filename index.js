@@ -65,7 +65,6 @@ morgan.token('posted-data', (req, res, param) => {
 
 app.use(morgan(':posted-data'))
 
-
 app.post('/api/persons', (req,res) => {
     const id = Math.floor(Math.random() * 10000)
     const name = req.body.name
