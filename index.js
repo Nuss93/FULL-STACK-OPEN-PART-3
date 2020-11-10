@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+app.use(express.json())
 
 let phoneNumbers = [
     {
@@ -50,10 +51,32 @@ app.delete('/api/persons/:id', (req,res) => {
     const id = Number(req.params.id)
     phoneNumbers = phoneNumbers.filter(a => a.id !== id)
 
-    console.log(id)
-    console.log(phoneNumbers)
+    // console.log(phoneNumbers)
 
     res.status(204).end()
+})
+
+app.post('/api/persons', (req,res) => {
+    const id = Math.floor(Math.random() * 10000)
+    const name = req.body.name
+    const number = req.body.number
+
+    // console.log(req.body)
+
+    if(!name || !number) {
+        res.status(404).json('No data parsed to the request.').end()
+        return
+    }
+
+    const store = {
+        id: id,
+        name: name,
+        number: number
+    }
+
+    phoneNumbers.push(store)
+
+    res.status(200).json({message:'ok'})
 })
 
 const PORT = 5000
