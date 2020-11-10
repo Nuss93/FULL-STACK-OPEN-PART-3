@@ -61,10 +61,16 @@ app.post('/api/persons', (req,res) => {
     const name = req.body.name
     const number = req.body.number
 
-    // console.log(req.body)
-
-    if(!name || !number) {
-        res.status(404).json('No data parsed to the request.').end()
+    if(!name || name === "") {
+        res.status(400).json({error : 'Please input name'}).end()
+        return
+    }
+    if(!number || number === "") {
+        res.status(400).json({error : 'Please input phone number'}).end()
+        return
+    }
+    if(phoneNumbers.find(a => a.name.toLowerCase() === name)){
+        res.status(400).json({error : 'Name must be unique'}).end()
         return
     }
 
