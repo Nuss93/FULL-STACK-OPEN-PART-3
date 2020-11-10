@@ -36,17 +36,24 @@ app.get('/info', (req,res) => {
 
 app.get('/api/persons/:id', (req,res) => {
     const id = Number(req.params.id)
-    const index = phoneNumbers.findIndex(a => a.id === id)
-    const person = phoneNumbers[index]
-    console.log(id)
+    const person = phoneNumbers.find(a => a.id === id)
     console.log(person)
 
-    if(index !== -1){
+    if(person){
         res.status(200).json(person)
     } else {
         res.status(404).end()
     }
+})
 
+app.delete('/api/persons/:id', (req,res) => {
+    const id = Number(req.params.id)
+    phoneNumbers = phoneNumbers.filter(a => a.id !== id)
+
+    console.log(id)
+    console.log(phoneNumbers)
+
+    res.status(204).end()
 })
 
 const PORT = 5000
