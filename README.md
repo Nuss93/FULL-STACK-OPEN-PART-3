@@ -1,3 +1,3 @@
 # FULL-STACK-OPEN-PART-3
 
-Online application : [https://nasreens-fullstack-app.herokuapp.com/](https://nasreens-fullstack-app.herokuapp.com/)
+Online application : [Nasreen's Fullstack App](https://nasreens-fullstack-app.herokuapp.com/)
