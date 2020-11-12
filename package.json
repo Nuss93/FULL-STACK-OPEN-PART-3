@@ -7,10 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "client": "cd ../../Full-stack-open-2020/part3/client && npm start",
     "start-dev": "concurrently \"npm run dev\" \"npm run client\"",
-    "build:ui": "rm -rf build && cd ../../Full-stack-open-2020/part3/client && npm run build --prod && cp -r build /Users/nasreenrazak/Documents/GitHub/Full-stack-open-2020-part-3",
-    "deploy": "git push heroku main"
+    "build:ui": "rm -rf build && cd /Users/nasreenrazak/Documents/GitHub/Full-stack-open-2020/part3/frontend && npm run build --prod && cp -r build /Users/nasreenrazak/Documents/GitHub/Full-stack-open-2020-part-3",
+    "deploy": "git push heroku main",
+    "deploy:full":"npm run build:ui && git add . && git commit -m uibuild && npm run deploy"
   },
   "repository": {
     "type": "git",
