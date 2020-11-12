@@ -1,7 +1,9 @@
+const cors = require('cors')
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
 app.use(express.json())
+app.use(cors())
 
 let phoneNumbers = [
     {
@@ -54,8 +56,6 @@ app.delete('/api/persons/:id', (req,res) => {
     const id = Number(req.params.id)
     phoneNumbers = phoneNumbers.filter(a => a.id !== id)
 
-    // console.log(phoneNumbers)
-
     res.status(204).end()
 })
 
@@ -63,10 +63,11 @@ morgan.token('posted-data', (req, res, param) => {
     return JSON.stringify(req.body)
 });
 
-app.use(morgan(':posted-data'))
+// app.use(morgan(':posted-data'))
 
 app.post('/api/persons', (req,res) => {
-    const id = Math.floor(Math.random() * 10000)
+    console.log(req.body)
+    const id = Number(req.body.id)
     const name = req.body.name
     const number = req.body.number
 
@@ -92,6 +93,15 @@ app.post('/api/persons', (req,res) => {
     phoneNumbers.push(store)
 
     res.status(200).json({message:'ok', data:store})
+})
+
+app.put('/api/persons/:id', (req,res) => {
+    const id = Number(req.params.id)
+    const number = req.body.number
+    const person = phoneNumbers.findIndex(a => a.id === id)
+
+    phoneNumbers[person] = {...phoneNumbers[person], number:number}
+    res.status(200).json({message:'ok', data:req.body})
 })
 
 const PORT = 5000
