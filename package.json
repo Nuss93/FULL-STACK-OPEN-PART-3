@@ -8,7 +8,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "start-dev": "concurrently \"npm run dev\" \"npm run client\"",
-    "build:ui": "rm -rf build && cd /Users/nasreenrazak/Documents/GitHub/Full-stack-open-2020/part3/frontend && npm run build --prod && cp -r build /Users/nasreenrazak/Documents/GitHub/Full-stack-open-2020-part-3",
+    "build:ui": "rm -rf build && cd /Users/nasreenrazak/Documents/GitHub/Full-stack-open-2020-part-3/frontend && npm run build --prod && cp -r build /Users/nasreenrazak/Documents/GitHub/Full-stack-open-2020-part-3",
     "deploy": "git push heroku main",
     "deploy:full":"npm run build:ui && git add . && git commit -m uibuild && npm run deploy"
   },
