@@ -1,7 +1,12 @@
-const cors = require('cors')
+// const { pass } = require('./config.js')
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
+
+const cors = require('cors')
+const People = require('./models/people')
+
 app.use(express.static('build'))
 app.use(express.json())
 app.use(cors())
@@ -31,14 +36,28 @@ let phoneNumbers = [
 
 app.use(morgan('tiny'))
 
+// @route GET api/persons
+// @desc Get full list
+// @access Public
 app.get('/api/persons', (req,res) => {
-    res.json(phoneNumbers)
+    People.find({}).then(result => {
+        result.length > 0 ? result.forEach(data => {
+            console.log(data)
+        }) : console.log(`No data available`)
+
+        res.json(result) 
+    })
 })
 
+// @route GET info
+// @desc Get info
+// @access Public
 app.get('/info', (req,res) => {
-    const count = phoneNumbers.length
-    const time = new Date()
-    res.send(`Phone book has info for ${count} people<br/><br/>${time}`)
+    People.find({}).then(result => {
+        const count = phoneNumbers.length
+        const time = new Date()
+        res.send(`Phone book has info for ${count} people<br/><br/>${time}`)
+    })
 })
 
 app.get('/api/persons/:id', (req,res) => {

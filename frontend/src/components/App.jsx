@@ -24,6 +24,7 @@ const App = () => {
     console.log('effect')
     
     personService.getAll().then(response => {
+      console.log(response);
       setPersons(response)
     })
   }, [])
