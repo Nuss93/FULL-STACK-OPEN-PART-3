@@ -3,9 +3,9 @@ const mongoose = require('mongoose')
 // console.log(process.argv)
 
 if(process.argv.length < 3){
-    console.log('===========================================================================')
+    console.log(' ')
     console.log(`  Please provide the password as an argument : node mongo.js <password>!!  `)
-    console.log('===========================================================================')
+    console.log(' ')
     process.exit(1)
 }
 
@@ -39,9 +39,9 @@ if(process.argv.length > 3){
         number: number,
     })
     people.save().then(result => {
-        console.log('==========================================================')
+        console.log(' ')
         console.log(`  Added ${name}'s number ${number} to phonebook!`)
-        console.log('==========================================================')
+        console.log(' ')
         mongoose.connection.close()
     })
 } else {
