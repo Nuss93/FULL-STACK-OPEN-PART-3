@@ -57,9 +57,7 @@ app.delete('/api/persons/:id', (req,res,next) => {
 
     People.findByIdAndRemove(id).then(() => {
         res.status(200).send({ message : `Successfully deleted user ${id}!` })
-    }).catch(err => {
-        next(err)
-    })
+    }).catch(err => next(err))
 })
 
 
