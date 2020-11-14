@@ -18,11 +18,7 @@ app.use(morgan('tiny'))
 // ! @access Public
 app.get('/api/persons', (req,res) => {
     People.find({}).then(result => {
-        result.length > 0 ? result.forEach(data => {
-            console.log(data)
-        }) : console.log(`No data available`)
-
-        res.json(result) 
+        res.status(200).json(result) 
     })
 })
 
@@ -153,7 +149,7 @@ const errorHandler = (error, req, res, next) => {
         return res.status(400).send({ error: 'Malformatted id' })
     }
     if(error.name === 'ValidationError'){
-        return res.status(400).send({ error: error.message })
+        return res.status(400).json({ error: error.message })
     }
     next(error)
 }

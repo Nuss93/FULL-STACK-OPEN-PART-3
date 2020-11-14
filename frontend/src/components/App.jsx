@@ -43,14 +43,14 @@ const App = () => {
     setSearch(newInput)
   }
 
-  const submitPersonV2 = (event) => {
+  const submitPerson = (event) => {
     event.preventDefault()
 
     let newPersons = [...persons]
     let newData = { ...input, id: newPersons.length + 1 }
-    newPersons.push(newData)
 
     personService.createPerson(newData).then(() => {
+      newPersons.push(newData)
       setPersons(newPersons)
       setNewInput({ name: '', number: '' })
 
@@ -59,11 +59,16 @@ const App = () => {
         setErrorMessage({ message: "", color: "success", display: false })
       }, 5000);
     }).catch(err => {
-      console.log(err.message);
+      console.log(err.response.data);
+      setErrorMessage({message:err.response.data.error, color:"danger", display:true})
+      setTimeout(() => {
+        setErrorMessage({ message: "", color: "success", display: false })
+      }, 10000);
     })
   }
 
-  const submitPerson = (event) => {
+  // ! This was the old version that overwrites a users phone number if the names arent unique
+  const submitPersonV1 = (event) => {
     event.preventDefault()
 
     let CHECKER = persons.findIndex(a => a.name.toLowerCase() === input.name.toLowerCase())
