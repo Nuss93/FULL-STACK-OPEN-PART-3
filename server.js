@@ -5,7 +5,6 @@ const morgan = require('morgan')
 
 const cors = require('cors')
 const People = require('./models/people')
-const uniqueValidator = require('mongoose-unique-validator');
 
 app.use(express.static('build'))
 app.use(express.json())
@@ -18,7 +17,7 @@ app.use(morgan('tiny'))
 // ! @access Public
 app.get('/api/persons', (req,res) => {
     People.find({}).then(result => {
-        res.status(200).json(result) 
+        res.status(200).json(result)
     })
 })
 
@@ -41,7 +40,7 @@ app.get('/api/persons/:id', (req,res,next) => {
 
     People.findById(id).then(result => {
         console.log(result)
-    
+
         res.status(200).json(result)
     }).catch(err => next(err))
 })
@@ -58,9 +57,9 @@ app.delete('/api/persons/:id', (req,res,next) => {
 })
 
 
-morgan.token('posted-data', (req, res, param) => {
+morgan.token('posted-data', (req) => {
     return JSON.stringify(req.body)
-});
+})
 app.use(morgan(':posted-data'))
 
 // ! @route POST api/persons/:id
@@ -78,12 +77,12 @@ app.post('/api/persons', (req,res,next) => {
     })
 
     store.save()
-    .then(result => result.toJSON())
-    .then(result => {
-        console.log(`Contact ${name} successfully saved!`)
-        res.status(200).json({message:'ok', data:store})
-    })
-    .catch(err => next(err))
+        .then(result => result.toJSON())
+        .then(() => {
+            console.log(`Contact ${name} successfully saved!`)
+            res.status(200).json({ message:'ok', data:store })
+        })
+        .catch(err => next(err))
 
     // if(!name || name === "") {
     //     res.status(400).json({error : 'Please input name'}).end()

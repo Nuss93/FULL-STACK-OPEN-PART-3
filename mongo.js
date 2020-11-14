@@ -38,7 +38,7 @@ if(process.argv.length > 3){
         name: name,
         number: number,
     })
-    people.save().then(result => {
+    people.save().then(() => {
         console.log(' ')
         console.log(`  Added ${name}'s number ${number} to phonebook!`)
         console.log(' ')
@@ -55,7 +55,7 @@ if(process.argv.length > 3){
         }) : console.log(`               No data available              `)
 
         console.log('==============================================')
-    
+
         mongoose.connection.close()
     })
 }

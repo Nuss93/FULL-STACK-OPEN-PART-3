@@ -7,11 +7,14 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "dev": "nodemon server.js",
+
+    "lint":"eslint .",
+
     "client": "cd /Users/nasreenrazak/Documents/GitHub/Full-stack-open-2020-part-3/frontend && npm start",
     "start-dev": "concurrently \"npm run dev\" \"npm run client\"",
     "build:ui": "rm -rf build && cd /Users/nasreenrazak/Documents/GitHub/Full-stack-open-2020-part-3/frontend && npm run build --prod && cp -r build /Users/nasreenrazak/Documents/GitHub/Full-stack-open-2020-part-3",
     "deploy": "git push heroku main",
-    "deploy:full": "npm run build:ui && git add . && git commit -m part3C && npm run deploy"
+    "deploy:full": "npm run build:ui && git add . && git commit -m part3D && npm run deploy"
   },
   "repository": {
     "type": "git",
@@ -24,6 +27,7 @@
   },
   "homepage": "https://github.com/Nuss93/FULL-STACK-OPEN-PART-3#readme",
   "devDependencies": {
+    "eslint": "^7.13.0",
     "nodemon": "^2.0.6"
   },
   "dependencies": {
