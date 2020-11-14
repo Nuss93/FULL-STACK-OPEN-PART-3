@@ -1,4 +1,3 @@
-// const { pass } = require('./config.js')
 require('dotenv').config()
 const express = require('express')
 const app = express()
@@ -10,29 +9,6 @@ const People = require('./models/people')
 app.use(express.static('build'))
 app.use(express.json())
 app.use(cors())
-
-let phoneNumbers = [
-    {
-        id: 1,
-        name: 'Arto Hellart',
-        number: '0123456789'
-    },
-    {
-        id: 2,
-        name: 'Camilla Cabello',
-        number: '32781263521'
-    },
-    {
-        id: 3,
-        name: 'Jamilla Jamayo',
-        number: '1234523423'
-    },
-    {
-        id: 4,
-        name: 'Sayu Amati',
-        number: '666666666'
-    },
-]
 
 app.use(morgan('tiny'))
 
@@ -63,31 +39,29 @@ app.get('/info', (req,res) => {
 // ! @route GET api/persons/:id
 // ! @desc Get one person's phone number
 // ! @access Public
-app.get('/api/persons/:id', (req,res) => {
+app.get('/api/persons/:id', (req,res,next) => {
     const id = req.params.id
 
     People.findById(id).then(result => {
         console.log(result)
     
         res.status(200).json(result)
-    }).catch(err => {
-        res.status(404).send({ message : 'Error! User with this id does not exist!' }).end()
-    })
+    }).catch(err => next(err))
 })
 
 // ! @route DELETE api/persons/:id
 // ! @desc Delete one person's phone number
 // ! @access Public
-app.delete('/api/persons/:id', (req,res) => {
+app.delete('/api/persons/:id', (req,res,next) => {
     const id = req.params.id
 
     People.findByIdAndRemove(id).then(() => {
         res.status(200).send({ message : `Successfully deleted user ${id}!` })
     }).catch(err => {
-        console.log(err.message)
-        res.status(404).send({ message : 'Error! User with this id does not exist!' }).end()
+        next(err)
     })
 })
+
 
 morgan.token('posted-data', (req, res, param) => {
     return JSON.stringify(req.body)
@@ -131,7 +105,7 @@ app.post('/api/persons', (req,res) => {
     })
 })
 
-app.put('/api/persons/:id', (req,res) => {
+app.put('/api/persons/:id', (req,res,next) => {
     const id = req.params.id
     const number = req.body.number
 
@@ -140,11 +114,10 @@ app.put('/api/persons/:id', (req,res) => {
         return
     }
 
-    People.findByIdAndUpdate(id, { number : number }).then(result => {
+    People.findByIdAndUpdate(id, { number : number }, { new : true }).then(result => {
         res.status(200).json({message:'ok', data:req.body})
     }).catch(err => {
-        console.log(err.message)
-        res.status(400).send(`Error updating number for user ${id}! User doesnt exist.`)
+        next(err)
     })
 })
 
@@ -153,7 +126,23 @@ const unknownEndpoint = (request, response) => {
     console.log('Response :', response)
     console.log('---')
 }
+
+// * Handler for requests with unknown endpoints
 app.use(unknownEndpoint)
+
+
+const errorHandler = (error, req, res, next) => {
+    console.log('aaa',error.message, error.name)
+
+    if(error.name === 'CastError'){
+        return res.status(400).send({ error: 'Malformatted id' })
+    }
+    next(error)
+}
+
+// * Handler for requests with results to errors
+app.use(errorHandler)
+
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
