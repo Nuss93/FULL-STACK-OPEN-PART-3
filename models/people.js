@@ -6,8 +6,7 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFind
 // 1. Define schema for each people data point using mongoose.Schema({})
 const peopleSchema = new mongoose.Schema({
     name: String,
-    number: Number,
-    id: String,
+    number: String,
 })
 peopleSchema.set('toJSON', {
     transform: (document, returnedObject) => {
