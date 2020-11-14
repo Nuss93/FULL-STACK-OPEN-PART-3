@@ -43,6 +43,26 @@ const App = () => {
     setSearch(newInput)
   }
 
+  const submitPersonV2 = (event) => {
+    event.preventDefault()
+
+    let newPersons = [...persons]
+    let newData = { ...input, id: newPersons.length + 1 }
+    newPersons.push(newData)
+
+    personService.createPerson(newData).then(() => {
+      setPersons(newPersons)
+      setNewInput({ name: '', number: '' })
+
+      setErrorMessage({message:`Successfully added ${input.name}!`, color:"success", display:true})
+      setTimeout(() => {
+        setErrorMessage({ message: "", color: "success", display: false })
+      }, 5000);
+    }).catch(err => {
+      console.log(err.message);
+    })
+  }
+
   const submitPerson = (event) => {
     event.preventDefault()
 

@@ -5,6 +5,7 @@ const morgan = require('morgan')
 
 const cors = require('cors')
 const People = require('./models/people')
+const uniqueValidator = require('mongoose-unique-validator');
 
 app.use(express.static('build'))
 app.use(express.json())
@@ -69,55 +70,71 @@ app.use(morgan(':posted-data'))
 // ! @route POST api/persons/:id
 // ! @desc Post one person's phone number
 // ! @access Public
-app.post('/api/persons', (req,res) => {
+app.post('/api/persons', (req,res,next) => {
     console.log(req.body)
     // const id = Number(req.body.id)
     const name = req.body.name
     const number = req.body.number
 
-    if(!name || name === "") {
-        res.status(400).json({error : 'Please input name'}).end()
-        return
-    }
-    if(!number || number === "") {
-        res.status(400).json({error : 'Please input phone number'}).end()
-        return
-    }
+    const store = new People({
+        name: name,
+        number: number
+    })
+
+    store.save()
+    .then(result => result.toJSON())
+    .then(result => {
+        console.log(`Contact ${name} successfully saved!`)
+        res.status(200).json({message:'ok', data:store})
+    })
+    .catch(err => next(err))
+
+    // if(!name || name === "") {
+    //     res.status(400).json({error : 'Please input name'}).end()
+    //     return
+    // }
+    // if(!number || number === "") {
+    //     res.status(400).json({error : 'Please input phone number'}).end()
+    //     return
+    // }
 
     // Check uniqueness of the name
-    People.find({ name : name }).then(result => {
-        if(result.length !== 0){
-            res.status(400).json({error : 'Name must be unique'}).end()
-            return
-        } else {
-            const store = new People({
-                name: name,
-                number: number
-            })
+    // People.find({ name : name }).then(result => {
+    //     if(result.length !== 0){
+    //         res.status(400).json({error : 'Name must be unique'}).end()
+    //         return
+    //     } else {
+    //         const store = new People({
+    //             name: name,
+    //             number: number
+    //         })
 
-            store.save().then(result => {
-                console.log(`Contact ${name} successfully saved!`)
-                res.status(200).json({message:'ok', data:store})
-            })
-        }
-    })
+    //         store.save()
+    //         .then(result => result.toJSON())
+    //         .then(result => {
+    //             console.log(`Contact ${name} successfully saved!`)
+    //             res.status(200).json({message:'ok', data:store})
+    //         })
+    //         .catch(err => next(err))
+    //     }
+    // })
 })
 
-app.put('/api/persons/:id', (req,res,next) => {
-    const id = req.params.id
-    const number = req.body.number
+// app.put('/api/persons/:id', (req,res,next) => {
+//     const id = req.params.id
+//     const number = req.body.number
 
-    if(!number || number === "") {
-        res.status(400).json({error : 'Please input phone number'}).end()
-        return
-    }
+//     if(!number || number === "") {
+//         res.status(400).json({error : 'Please input phone number'}).end()
+//         return
+//     }
 
-    People.findByIdAndUpdate(id, { number : number }, { new : true }).then(result => {
-        res.status(200).json({message:'ok', data:req.body})
-    }).catch(err => {
-        next(err)
-    })
-})
+//     People.findByIdAndUpdate(id, { number : number }, { new : true }).then(result => {
+//         res.status(200).json({message:'ok', data:req.body})
+//     }).catch(err => {
+//         next(err)
+//     })
+// })
 
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error : 'Error! Unknown endpoint!' })
@@ -134,6 +151,9 @@ const errorHandler = (error, req, res, next) => {
 
     if(error.name === 'CastError'){
         return res.status(400).send({ error: 'Malformatted id' })
+    }
+    if(error.name === 'ValidationError'){
+        return res.status(400).send({ error: error.message })
     }
     next(error)
 }
